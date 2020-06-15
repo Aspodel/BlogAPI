@@ -10,6 +10,5 @@ namespace BlogApi.Models.Middleware
         public List<Author> ListAuthor = new List<Author>();
 
         public string Title { get; set; }
-        //public string AuthorName { get; set; }
     }
 }

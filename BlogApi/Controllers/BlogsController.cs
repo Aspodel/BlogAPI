@@ -80,35 +80,63 @@ namespace BlogApi.Controllers
         // POST: api/Blogs
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<Blog>> PostBlog([FromBody]AddNewBlog model)
-        {
-            Author author = new Author
-            {
-                //AuthorName = model.AuthorName
-            };
-            Blog blog = new Blog()
-            {
-                Title = model.Title,
-                Like = 0,
-                Status = false,
-                Content = new Content(),
-                PublicationTime = DateTime.UtcNow,
-                //BlogAuthors = new List<BlogAuthor> { new BlogAuthor { Blog = blog, Author = author } }
-            };
-            BlogAuthor blogAuthor = new BlogAuthor()
-            {
-                Author = author,
-                Blog = blog
-            };
-            _context.Authors.Add(author);
-            _context.Blogs.Add(blog);
-            _context.BlogAuthors.Add(blogAuthor);
-            await _context.SaveChangesAsync();
+        //[HttpPost]
+        //public async Task<ActionResult<Blog>> PostBlog([FromBody]AddNewBlog model)
+        //{
+        //    Author author = new Author
+        //    {
+        //        //AuthorName = model.AuthorName
+        //    };
+        //    Blog blog = new Blog()
+        //    {
+        //        Title = model.Title,
+        //        Like = 0,
+        //        Status = false,
+        //        Content = new Content(),
+        //        PublicationTime = DateTime.UtcNow
+        //    };
+        //    BlogAuthor blogAuthor = new BlogAuthor()
+        //    {
+        //        Author = author,
+        //        Blog = blog
+        //    };
+        //    _context.Authors.Add(author);
+        //    _context.Blogs.Add(blog);
+        //    _context.BlogAuthors.Add(blogAuthor);
+        //    await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBlog", new { id = blog.BlogId }, blog);
+        //    return CreatedAtAction("GetBlog", new { id = blog.BlogId }, blog);
+        //}
+
+
+        // GET: http://localhost:65472/api/Blogs/UpdateLike/id
+        // UPDATE LIKE FOR BLOG
+        [HttpGet("{id}")]
+        public async Task<IActionResult> UpdateLike (int id)
+        {
+            Blog blog = await _context.Blogs.FindAsync(id);
+            blog.Like += 1;
+            _context.Blogs.Update(blog);
+            await _context.SaveChangesAsync();
+            return Ok(blog);
         }
 
+        // GET: http://localhost:65472/api/Blogs/BlogsOfAuthor/id
+        // GET BLOG FROM SPECIFICED AUTHOR
+        [HttpGet("{id}")]
+        public async Task<IActionResult> BlogsOfAuthor (int id)
+        {
+            var ListBlogId = _context.BlogAuthors.Where(x => x.AuthorId == id);
+            List<Blog> ListBlog = new List<Blog>();
+            foreach(var item in ListBlogId)
+            {
+                Blog blog = await _context.Blogs.FindAsync(item.BlogId);
+                ListBlog.Add(blog);
+            }
+            return Ok(ListBlog);
+        }
+
+        // POST: http://localhost:65472/api/Blogs/NewBlog
         [HttpPost]
         public async Task<ActionResult<Blog>> NewBlog([FromBody] AddNewBlog model)
         {
@@ -123,8 +151,7 @@ namespace BlogApi.Controllers
                 Like = 0,
                 Status = false,
                 Content = new Content(),
-                PublicationTime = DateTime.UtcNow,
-                //BlogAuthors = new List<BlogAuthor> { new BlogAuthor { Blog = blog, Author = author } }
+                PublicationTime = DateTime.UtcNow
             };
             foreach (Author author in model.ListAuthor)
             {
@@ -152,12 +179,6 @@ namespace BlogApi.Controllers
                     _context.BlogAuthors.Add(blogAuthor);
                 }
             };
-            //BlogAuthor blogAuthor = new BlogAuthor()
-            //{
-            //    //Author = author,
-            //    Blog = blog
-            //};
-            //_context.Authors.Add(author);
             _context.Blogs.Add(blog);
             await _context.SaveChangesAsync();
 
