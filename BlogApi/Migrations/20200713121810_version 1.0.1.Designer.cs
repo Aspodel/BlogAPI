@@ -4,14 +4,16 @@ using BlogApi.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlogApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200713121810_version 1.0.1")]
+    partial class version101
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,22 +110,7 @@ namespace BlogApi.Migrations
                     b.ToTable("BlogAuthors");
                 });
 
-            modelBuilder.Entity("BlogApi.Models.ManyToMany.BlogUser", b =>
-                {
-                    b.Property<int>("BlogId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BlogId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("BlogUsers");
-                });
-
-            modelBuilder.Entity("BlogApi.Models.User.UserModel", b =>
+            modelBuilder.Entity("BlogApi.Models.User.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -180,9 +167,6 @@ namespace BlogApi.Migrations
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
-
-                    b.Property<string>("UserDescription")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserImage")
                         .IsRequired()
@@ -359,21 +343,6 @@ namespace BlogApi.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BlogApi.Models.ManyToMany.BlogUser", b =>
-                {
-                    b.HasOne("BlogApi.Models.BlogModels.Blog", "Blog")
-                        .WithMany("BlogUsers")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BlogApi.Models.User.UserModel", "User")
-                        .WithMany("BlogUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
@@ -385,7 +354,7 @@ namespace BlogApi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.HasOne("BlogApi.Models.User.UserModel", null)
+                    b.HasOne("BlogApi.Models.User.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -394,7 +363,7 @@ namespace BlogApi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.HasOne("BlogApi.Models.User.UserModel", null)
+                    b.HasOne("BlogApi.Models.User.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -409,7 +378,7 @@ namespace BlogApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlogApi.Models.User.UserModel", null)
+                    b.HasOne("BlogApi.Models.User.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -418,7 +387,7 @@ namespace BlogApi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.HasOne("BlogApi.Models.User.UserModel", null)
+                    b.HasOne("BlogApi.Models.User.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

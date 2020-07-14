@@ -9,10 +9,14 @@ namespace BlogApi.Models.BlogModels
     {
         public int ParagraphId { get; set; }
         public string Type { get; set; }
-        public string ParagraphContent { get; set; }
+        public string Content { get; set; }
 
         //One to Many relationship
-        public int ContentId { get; set; }
-        public Content Content { get; set; }
+        //public int ContentId { get; set; }
+        //public Content Content { get; set; }
+
+        // One to Many relationship: paragraph is Many
+        public int BlogId { get; set; }
+        public Blog Blog { get; set; }
     }
 }
